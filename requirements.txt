@@ -1,0 +1,4 @@
+cython>=0.29.24
+setuptools
+numpy
+mpi4py
