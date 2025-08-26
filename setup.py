@@ -7,8 +7,8 @@ mpi_compile_info = os.popen("mpicc -compile_info").read().strip().split(" ")
 mpi_link_info = os.popen("mpicc -link_info").read().strip().split(" ")
 
 parrsb = Extension(
-    "parrsb_wrapper",
-    sources=["src/parrsb_wrapper.pyx"],
+    "parrsb",
+    sources=["src/parrsb.pyx"],
     include_dirs=["../parRSB/install/include", "../gslib/build/include"],
     libraries=["parRSB", "gs"],
     library_dirs=["../parRSB/install/lib", "../gslib/build/lib"],
