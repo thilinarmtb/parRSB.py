@@ -23,7 +23,7 @@ parrsb = Extension(
 )
 
 setup(
-    name="parrsb.py",
+    name="parrsb",
     version="0.1",
     description="parrsb.py - Python wrappers for parRSB",
     long_description=open("README.md", "r").read(),
