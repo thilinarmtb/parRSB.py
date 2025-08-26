@@ -1,5 +1,6 @@
 all: parRSB
-	python3 setup.py build_ext --inplace
+	python setup.py build_ext
+	python setup.py install
 
 parRSB: gslib
 	$(MAKE) -C ../parRSB SHARED=1 GSLIBPATH=../gslib/build lib install
