@@ -17,6 +17,7 @@ parrsb = Extension(
     ],
     libraries=["parRSB", "gs"],
     library_dirs=["../parRSB/install/lib", "../gslib/build/lib"],
+    runtime_library_dirs=["../parRSB/install/lib", "../gslib/build/lib"],
     extra_compile_args=mpi_compile_info[1:],
     extra_link_args=mpi_link_info[1:],
 )
