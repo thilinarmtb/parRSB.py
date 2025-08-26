@@ -1,5 +1,6 @@
 import os
 
+import numpy
 from Cython.Build import cythonize
 from setuptools import Extension, find_packages, setup
 
@@ -9,7 +10,11 @@ mpi_link_info = os.popen("mpicc -link_info").read().strip().split(" ")
 parrsb = Extension(
     "parrsb",
     sources=["src/parrsb.pyx"],
-    include_dirs=["../parRSB/install/include", "../gslib/build/include"],
+    include_dirs=[
+        "../parRSB/install/include",
+        "../gslib/build/include",
+        numpy.get_include(),
+    ],
     libraries=["parRSB", "gs"],
     library_dirs=["../parRSB/install/lib", "../gslib/build/lib"],
     extra_compile_args=mpi_compile_info[1:],
