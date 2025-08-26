@@ -10,3 +10,7 @@ gslib:
 
 clean:
 	$(RM) -rf build/ *.so src/*.c src/*.swp
+
+nuke: clean
+	$(MAKE) -C ../parRSB GSLIBPATH=../gslib/build clean
+	$(MAKE) -C ../gslib clean
