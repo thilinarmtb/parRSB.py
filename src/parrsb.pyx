@@ -9,13 +9,16 @@ from parrsb cimport parrsb_conn_mesh
 def conn_mesh(np.ndarray[np.float64_t, ndim=2] coord,
               np.ndarray[np.float64_t, ndim=2] pinfo,
               double tol, MPI.Comm comm):
-    cdef int ne = coord.shape[0]
+    cdef int nev = coord.shape[0]
     cdef int nd = coord.shape[1]
     cdef int np = pinfo.shape[0]
 
     # sanity checks: only 3d meshes are supported as of now.
     assert nd == 3
     assert pinfo.shape[1] == 2
+
+    cdef int nv = 8
+    cdef int ne = nev // nv
 
     cdef double *coord_ = <double *>malloc(ne * nd * cython.sizeof(cython.double))
     for e in range(ne):
@@ -27,7 +30,6 @@ def conn_mesh(np.ndarray[np.float64_t, ndim=2] coord,
         for d in range(2):
             pinfo_[e * 2 + d] = pinfo[e, d]
 
-    cdef int nv = 8
     cdef long long *vtx_ = <long long *>malloc(ne * nv * cython.sizeof(cython.longlong))
     cdef int err = parrsb_conn_mesh(vtx_, coord_, ne, nd, pinfo_, np, tol, comm.ob_mpi)
 
