@@ -6,8 +6,10 @@ from libc.stdlib cimport free, malloc
 from parrsb cimport parrsb_conn_mesh
 
 
-cdef conn_mesh(np.ndarray[np.float64_t, ndim=2] vtx, np.ndarray[np.float64_t, ndim=2] coord,
-               np.ndarray[np.float64_t, ndim=2] pinfo, double tol, MPI.Comm comm):
+def conn_mesh(np.ndarray[np.float64_t, ndim=2] vtx,
+              np.ndarray[np.float64_t, ndim=2] coord,
+              np.ndarray[np.float64_t, ndim=2] pinfo,
+              double tol, MPI.Comm comm):
     cdef int ne = vtx.shape[0]
     cdef int nv = vtx.shape[1]
 
@@ -29,7 +31,7 @@ cdef conn_mesh(np.ndarray[np.float64_t, ndim=2] vtx, np.ndarray[np.float64_t, nd
         for d in range(2):
             pinfo_[e * 2 + d] = pinfo[e, d]
 
-    err = parrsb_conn_mesh(vtx_, coord_, ne, nd, pinfo_, np, tol, comm.ob_mpi)
+    cdef int err = parrsb_conn_mesh(vtx_, coord_, ne, nd, pinfo_, np, tol, comm.ob_mpi)
 
     for e in range(ne):
         for v in range(nv):
