@@ -37,7 +37,7 @@ def conn_mesh(cnp.ndarray[cnp.float64_t, ndim=2] coord,
     cdef int err = parrsb_conn_mesh(vtx_, coord_, nelem, ndim, pinfo_, npi, tol, comm.ob_mpi)
 
     vtx = np.zeros((nelem, nv))
-    if err != 0:
+    if err == 0:
         for e in range(nelem):
             for v in range(nv):
                 vtx[e, v] = vtx_[e * nv + v]
