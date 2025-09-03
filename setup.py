@@ -5,22 +5,25 @@ from Cython.Build import cythonize
 from setuptools import Extension, find_packages, setup
 from pathlib import Path
 
-mpi_compile_info = os.popen("mpicc -compile_info").read().strip().split(" ")
-mpi_link_info = os.popen("mpicc -link_info").read().strip().split(" ")
-
+try:
+    mpicc = os.environ["MPICC"]
+except KeyError:
+    print("MPICC is not set!")
 try:
     parrsb_dir = os.environ["PARRSB_DIR"]
 except KeyError:
     print("PARRSB_DIR is not set!")
-
 try:
     gslib_dir = os.environ["GSLIB_DIR"]
 except KeyError:
     print("GSLIB_DIR is not set!")
 
 resolve = lambda path: str(path.resolve())
+mpi_compile_info = os.popen(f"{mpicc} -compile_info").read().strip().split(" ")
+mpi_link_info = os.popen(f"{mpicc} -link_info").read().strip().split(" ")
 parrsb_path = Path(parrsb_dir)
 gslib_path = Path(gslib_dir)
+
 parrsb = Extension(
     "parrsb",
     sources=["src/parrsb.pyx"],
