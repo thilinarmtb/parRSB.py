@@ -1,16 +1,9 @@
-all: parRSB
-	python setup.py build_ext
-	python setup.py install
+GSLIB_DIR ?=
+PARRSB_DIR ?=
 
-parRSB: gslib
-	$(MAKE) -C ../parRSB SHARED=1 GSLIBPATH=../gslib/build lib install
-
-gslib:
-	$(MAKE) -C ../gslib STATIC=0 SHARED=1 install
+all:
+	GSLIB_DIR=$(GSLIB_DIR) PARRSB_DIR=$(PARRSB_DIR) python setup.py bdist_wheel
+	pip install dist/parrsb-*.whl
 
 clean:
-	$(RM) -rf build/ *.so src/*.c src/*.swp
-
-nuke: clean
-	$(MAKE) -C ../parRSB GSLIBPATH=../gslib/build clean
-	$(MAKE) -C ../gslib clean
+	$(RM) -rf build/ dist/ parrsb.egg-info src/*.c src/*.swp

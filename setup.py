@@ -3,24 +3,35 @@ import os
 import numpy
 from Cython.Build import cythonize
 from setuptools import Extension, find_packages, setup
+from pathlib import Path
 
 mpi_compile_info = os.popen("mpicc -compile_info").read().strip().split(" ")
 mpi_link_info = os.popen("mpicc -link_info").read().strip().split(" ")
 
+try:
+    parrsb_dir = os.environ["PARRSB_DIR"]
+    gslib_dir = os.environ["GSLIB_DIR"]
+except KeyError:
+    print("Either PARRSB_DIR or GSLIB_DIR is not set!")
+
+resolve = lambda path: str(path.resolve())
+parrsb_path = Path(parrsb_dir)
+gslib_path = Path(gslib_dir)
 parrsb = Extension(
     "parrsb",
     sources=["src/parrsb.pyx"],
     include_dirs=[
-        "../parRSB/install/include",
-        "../gslib/build/include",
         numpy.get_include(),
+        resolve(parrsb_path / "include"),
+        resolve(gslib_path / "include"),
     ],
     libraries=["parRSB", "gs"],
-    library_dirs=["../parRSB/install/lib", "../gslib/build/lib"],
-    runtime_library_dirs=["../parRSB/install/lib", "../gslib/build/lib"],
+    library_dirs=[resolve(parrsb_path / "lib"), resolve(gslib_path / "lib")],
+    runtime_library_dirs=[resolve(parrsb_path / "lib"), resolve(gslib_path / "lib")],
     extra_compile_args=mpi_compile_info[1:],
     extra_link_args=mpi_link_info[1:],
 )
+
 
 setup(
     name="parrsb",
