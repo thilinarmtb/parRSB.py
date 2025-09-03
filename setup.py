@@ -18,12 +18,12 @@ try:
 except KeyError:
     print("GSLIB_DIR is not set!")
 
-resolve = lambda path: str(path.resolve())
 mpi_compile_info = os.popen(f"{mpicc} -compile_info").read().strip().split(" ")
 mpi_link_info = os.popen(f"{mpicc} -link_info").read().strip().split(" ")
 parrsb_path = Path(parrsb_dir)
 gslib_path = Path(gslib_dir)
 
+resolve = lambda path: str(path.resolve())
 parrsb = Extension(
     "parrsb",
     sources=["src/parrsb.pyx"],
