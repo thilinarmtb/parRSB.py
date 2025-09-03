@@ -10,9 +10,13 @@ mpi_link_info = os.popen("mpicc -link_info").read().strip().split(" ")
 
 try:
     parrsb_dir = os.environ["PARRSB_DIR"]
+except KeyError:
+    print("PARRSB_DIR is not set!")
+
+try:
     gslib_dir = os.environ["GSLIB_DIR"]
 except KeyError:
-    print("Either PARRSB_DIR or GSLIB_DIR is not set!")
+    print("GSLIB_DIR is not set!")
 
 resolve = lambda path: str(path.resolve())
 parrsb_path = Path(parrsb_dir)
