@@ -2,9 +2,10 @@
 
 ### Building the library
 
-`parRSB.py` depends on [gslib]() and [parRSB](). Please follow the commands
-below to download and install them. We need the dynamic (or shared) versions
-of the above libraries (not the default static version).
+`parRSB.py` depends on [gslib](https://github.com/Nek5000/gslib.git) and
+[parRSB](https://github.com/thilinarmtb/parRSB.git). Please follow the
+commands below to download and install them. We need the dynamic (or shared)
+versions of the above libraries (not the default static version).
 
 Install `gslib`:
 ```sh
