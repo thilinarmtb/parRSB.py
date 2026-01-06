@@ -19,8 +19,7 @@ Then install `parRSB`:
 ```sh
 git clone https://github.com/thilinarmtb/parRSB.git -b general_graph
 cd parRSB
-export GSLIB_DIR=../gslib/install
-CC=mpicc DESTDIR=./install make install SHARED=1
+CC=mpicc DESTDIR=./install GSLIB_DIR=../gslib/install make install SHARED=1
 cd ..
 ```
 
