@@ -1,3 +1,4 @@
 build/
 parrsb.egg-info/
 src/parrsb.c
+.venv/
