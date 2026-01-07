@@ -3,29 +3,17 @@
 ### Building the library
 
 `parRSB.py` depends on [gslib](https://github.com/Nek5000/gslib.git) and
-[parRSB](https://github.com/thilinarmtb/parRSB.git). Please follow the
-commands below to download and install them. We need the dynamic (or shared)
-versions of the above libraries (not the default static version).
+[parRSB](https://github.com/thilinarmtb/parRSB.git). The `Makefile` found
+at the root of this repository downloads and builds these dependencies (so
+no need to manually download and build them).
 
-Install `gslib`:
-```sh
-git clone https://github.com/Nek5000/gslib.git
-cd gslib
-CC=mpicc DESTDIR=./install make SHARED=1 STATIC=0
-cd ..
-```
+This project also uses `uv` for managing Python virtual environments. You
+can install it by following the instructions [here](https://docs.astral.sh/uv/getting-started/installation/).
 
-Then install `parRSB`:
-```sh
-git clone https://github.com/thilinarmtb/parRSB.git -b general_graph
-cd parRSB
-CC=mpicc DESTDIR=./install GSLIB_DIR=../gslib/install make install SHARED=1
-cd ..
-```
-
-Finally build the wrappers:
+After installing `uv`, you can download and build the python wrappers by
+running:
 ```sh
 git clone https://github.com/thilinarmtb/parRSB.py.git
 cd parRSB.py
-CC=mpicc GSLIB_DIR=../gslib/install PARRSB_DIR=../parRSB/install make
+make
 ```
