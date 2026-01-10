@@ -1,13 +1,11 @@
+[build-system]
+requires = ["scikit-build-core", "cython", "cython-cmake", "numpy", "mpi4py"]
+build-backend = "scikit_build_core.build"
+
 [project]
 version = "0.0.1"
 name = "parrsb.py"
 description = ""
-dependencies = [
-    "cython>=0.29.24",
-    "setuptools",
-    "numpy",
-    "mpi4py",
-]
 license = "MIT"
 readme = "README.md"
 authors = [
