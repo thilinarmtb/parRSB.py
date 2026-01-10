@@ -61,6 +61,8 @@ add_custom_command(
   DEPENDS parRSB_ext
 )
 
-python_add_library(parRSB.py MODULE "${CMAKE_CURRENT_BINARY_DIR}/src/parrsb.c" WITH_SOABI)
-target_include_directories(parRSB.py PRIVATE ${PARRSB_DIR}/include ${GSLIB_DIR}/include)
-target_link_libraries(parRSB.py PRIVATE MPI::MPI_C Python::NumPy)
+python_add_library(parrsb MODULE "${CMAKE_CURRENT_BINARY_DIR}/src/parrsb.c" WITH_SOABI)
+target_include_directories(parrsb PRIVATE ${PARRSB_DIR}/include ${GSLIB_DIR}/include)
+target_link_libraries(parrsb PRIVATE MPI::MPI_C Python::NumPy)
+
+install(TARGETS parrsb LIBRARY DESTINATION .)
