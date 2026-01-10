@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 version = "0.0.1"
-name = "parrsb.py"
+name = "parrsb"
 description = ""
 license = "MIT"
 readme = "README.md"
@@ -27,6 +27,6 @@ combine-as-imports = true
 
 [dependency-groups]
 dev = [
-    "ruff>=0.13.2",
-    "pytest",
+    "mpi4py>=4.1.1",
+    "numpy>=2.2.6",
 ]
