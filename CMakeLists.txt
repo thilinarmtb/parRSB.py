@@ -25,13 +25,7 @@ if ("${CYTHON_VERSION}" VERSION_LESS "${CYTHON_MIN}")
 endif()
 
 find_package(MPI REQUIRED)
-
-include(FetchContent)
-FetchContent_Declare(parrsb_content
-  GIT_REPOSITORY https://github.com/thilinarmtb/parRSB.git
-  GIT_TAG general_graph
-)
-FetchContent_MakeAvailable(parrsb_content)
+find_package(parRSB REQUIRED)
 
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/src/parrsb.c"
@@ -41,6 +35,6 @@ add_custom_command(
 )
 
 python_add_library(parrsb MODULE "${CMAKE_CURRENT_BINARY_DIR}/src/parrsb.c" WITH_SOABI)
-target_link_libraries(parrsb PRIVATE parRSB MPI::MPI_C Python::NumPy)
+target_link_libraries(parrsb PRIVATE parRSB::parRSB MPI::MPI_C Python::NumPy)
 
 install(TARGETS parrsb DESTINATION .)
