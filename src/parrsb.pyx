@@ -3,10 +3,26 @@ cimport mpi4py.libmpi as libmpi
 cimport mpi4py.MPI as MPI
 cimport numpy as cnp
 from libc.stdlib cimport free, malloc
-from parrsb cimport parrsb_conn_mesh
+from parrsb cimport parrsb_conn_mesh, parrsb_read_mesh
 
 
 import numpy as np
+
+
+cdef class Mesh:
+    cdef unsigned nel, nv, nbcs
+    cdef long long *vl
+    cdef long long *bcs
+    cdef double *coord
+
+    def __cinit__(self, str name, MPI.Comm comm):
+        c_name = name.encode('utf-8') + b'\x00'
+        parrsb_read_mesh(&self.nel, &self.nv, &self.coord, &self.nbcs, &self.bcs, c_name, comm.ob_mpi)
+
+    def __dealloc__(self):
+        free(self.bcs)
+        free(self.coord)
+        free(self.vl)
 
 
 def conn_mesh(cnp.ndarray[cnp.float64_t, ndim=2] coord,
