@@ -1,0 +1,46 @@
+name: parRSB.py CI
+on:
+  push:
+    branch: [main]
+  pull_request:
+    branch: [main]
+
+env:
+  CC: mpicc
+  VENV: ${{ github.workspace }}/.venv
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install apt dependencies
+        shell: bash
+        run: |
+          sudo apt -y update
+          sudo apt install -y openmpi-bin libopenmpi-dev
+          sudo apt install -y libblas-dev liblapack-dev
+          sudo apt install -y build-essential cmake
+      - name: Initialize the venv
+        shell: bash
+        run: |
+           uv venv --clear ${VENV}
+      - name: Build parRSB
+        shell: bash
+        run: |
+          git clone https://github.com/thilinarmtb/parRSB.git -b general_graph
+          cd parRSB
+          cmake -B build -S . -DCMAKE_INSTALL_PREFIX=${VENV}
+          cmake --build build --target install
+      - name: Build parRSB.py
+        shell: bash
+        run: |
+           source ${VENV}/bin/activate
+           CMAKE_MODULE_PATH=${VENV} pip install git+https://github.com/thilinarmtb/parRSB.py.git
+      - name: Run parRSB.py tests
+        shell: bash
+        run: |
+           source ${VENV}/bin/activate
+           uv run tests/00_conn_mesh.py
