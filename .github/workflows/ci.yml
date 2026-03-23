@@ -4,6 +4,13 @@ on:
     branch: [main]
   pull_request:
     branch: [main]
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
 
 env:
   CC: mpicc
