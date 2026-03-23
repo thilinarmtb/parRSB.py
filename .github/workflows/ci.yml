@@ -23,6 +23,9 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install uv
         uses: astral-sh/setup-uv@v7
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ inputs.debug_enabled }}
       - name: Install apt dependencies
         shell: bash
         run: |
@@ -51,3 +54,6 @@ jobs:
         run: |
            source ${VENV}/bin/activate
            uv run tests/00_conn_mesh.py
+      - name: Block to allow inspecting failures
+        run: sleep 30m
+        if: ${{ failure() && inputs.debug_enabled }}
