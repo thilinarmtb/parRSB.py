@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.21...4.0.0)
 
 project(${SKBUILD_PROJECT_NAME} LANGUAGES C)
 
+set(CMAKE_PREFIX_PATH "${parRSB_DIR};${CMAKE_PREFIX_PATH}")
+
 find_package(Python
   COMPONENTS
     Interpreter
@@ -21,7 +23,8 @@ find_package(Cython ${CYTHON_MIN} REQUIRED)
 include(UseCython)
 
 if ("${CYTHON_VERSION}" VERSION_LESS "${CYTHON_MIN}")
-  message(FATAL_ERROR "Cython version found: ${CYTHON_VERSION}. Minimum required: ${CYTHON_MIN}")
+  message(FATAL_ERROR
+    "Found Cython ${CYTHON_VERSION} but at least ${CYTHON_MIN} is required.")
 endif()
 
 find_package(MPI REQUIRED)

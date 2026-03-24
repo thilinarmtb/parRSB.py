@@ -11,11 +11,9 @@ on:
         description: 'Run with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
-
 env:
   CC: mpicc
   VENV: ${{ github.workspace }}/.venv
-
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -36,7 +34,7 @@ jobs:
       - name: Initialize the venv
         shell: bash
         run: |
-           uv venv --clear ${VENV}
+           uv venv ${VENV}
       - name: Build parRSB
         shell: bash
         run: |
@@ -48,11 +46,12 @@ jobs:
         shell: bash
         run: |
            source ${VENV}/bin/activate
-           CMAKE_MODULE_PATH=${VENV} pip install git+https://github.com/thilinarmtb/parRSB.py.git
+           uv pip install . --target ${VENV} -vv -Ccmake.define.parRSB_DIR=${VENV}
       - name: Run parRSB.py tests
         shell: bash
         run: |
            source ${VENV}/bin/activate
+           export LD_LIBRARY_PATH=${VENV}/lib:${LD_LIBRARY_PATH}
            uv run tests/00_conn_mesh.py
       - name: Block to allow inspecting failures
         run: sleep 30m
