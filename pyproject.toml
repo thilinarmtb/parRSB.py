@@ -12,6 +12,10 @@ authors = [
     { name = "Thilina Ratnayaka", email = "thilinarmtb@gmail.com" },
 ]
 requires-python = ">=3.10"
+dependencies = [
+    "mpi4py>=4.1.1",
+    "numpy>=2.2.6",
+]
 
 [tool.ruff]
 preview = true
@@ -24,9 +28,3 @@ multiline-quotes = "double"
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
-
-[dependency-groups]
-dev = [
-    "mpi4py>=4.1.1",
-    "numpy>=2.2.6",
-]
