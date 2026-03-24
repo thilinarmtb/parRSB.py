@@ -18,7 +18,6 @@ if __name__ == "__main__":
         coord.append([1, 0, 1])
         coord.append([1, 1, 1])
         coord.append([0, 1, 1])
-
     if rank == (size - 1):
         coord.append([1, 0, 0])
         coord.append([2, 0, 0])
