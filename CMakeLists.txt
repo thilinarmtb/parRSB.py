@@ -34,7 +34,8 @@ add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/src/parrsb.c"
   MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/src/parrsb.pyx"
   VERBATIM
-  COMMAND Python::Interpreter -m cython "${CMAKE_CURRENT_SOURCE_DIR}/src/parrsb.pyx" --output-file "${CMAKE_CURRENT_BINARY_DIR}/src/parrsb.c"
+  COMMAND Python::Interpreter -m cython "${CMAKE_CURRENT_SOURCE_DIR}/src/parrsb.pyx"
+    --output-file "${CMAKE_CURRENT_BINARY_DIR}/src/parrsb.c"
 )
 
 python_add_library(parrsb MODULE "${CMAKE_CURRENT_BINARY_DIR}/src/parrsb.c" WITH_SOABI)
