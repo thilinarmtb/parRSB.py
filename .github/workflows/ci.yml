@@ -8,7 +8,7 @@ on:
     inputs:
       debug_enabled:
         type: boolean
-        description: 'Run with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        description: 'Run with tmate (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
 env:
@@ -54,5 +54,5 @@ jobs:
            export LD_LIBRARY_PATH=${VENV}/lib:${LD_LIBRARY_PATH}
            uv run tests/00_conn_mesh.py
       - name: Block to allow inspecting failures
-        run: sleep 30m
+        run: sleep 60m
         if: ${{ failure() && inputs.debug_enabled }}
