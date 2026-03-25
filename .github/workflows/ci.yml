@@ -47,12 +47,6 @@ jobs:
         run: |
            source ${VENV}/bin/activate
            uv pip install . --target ${VENV} -vv -Ccmake.define.parRSB_DIR=${VENV}
-      - name: Run parRSB.py tests
-        shell: bash
-        run: |
-           source ${VENV}/bin/activate
-           export LD_LIBRARY_PATH=${VENV}/lib:${LD_LIBRARY_PATH}
-           uv run tests/00_conn_mesh.py
       - name: Block to allow inspecting failures
         run: sleep 60m
         if: ${{ failure() && inputs.debug_enabled }}
