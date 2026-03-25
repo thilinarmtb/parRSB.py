@@ -17,14 +17,16 @@ dependencies = [
     "numpy>=2.2.6",
 ]
 
-[tool.ruff]
-preview = true
-line-length = 80
+[dependency-groups]
+dev = [
+  "pytest>=8.0",
+  "cython-lint",
+  "isort>=8",
+]
 
-[tool.ruff.lint.flake8-quotes]
-docstring-quotes = "double"
-inline-quotes = "double"
-multiline-quotes = "double"
+[tool.cython-lint]
+max-line-length = 88
 
-[tool.ruff.lint.isort]
-combine-as-imports = true
+[tool.isort]
+profile = "black"
+line_length = 88

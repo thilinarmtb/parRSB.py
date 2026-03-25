@@ -2,7 +2,6 @@ import numpy as np
 from mpi4py import MPI
 from parrsb import conn_mesh
 
-
 if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
