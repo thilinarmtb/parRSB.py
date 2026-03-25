@@ -1,11 +1,8 @@
 cimport cython
-cimport mpi4py.libmpi as libmpi
 cimport mpi4py.MPI as MPI
 cimport numpy as cnp
 from libc.stdlib cimport free, malloc
 from parrsb cimport parrsb_conn_mesh, parrsb_read_mesh
-
-
 import numpy as np
 
 

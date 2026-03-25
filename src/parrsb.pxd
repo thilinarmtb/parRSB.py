@@ -11,33 +11,32 @@ cdef extern from "parrsb.h":
     # parRSB options
     int parrsb_options_get_default(parrsb_options_t *options)
 
-    int parrsb_options_set_partitioner(parrsb_options_t options, int partitioner);
+    int parrsb_options_set_partitioner(parrsb_options_t options, int partitioner)
 
-    int parrsb_options_set_rsb_algo(parrsb_options_t options, int algo);
+    int parrsb_options_set_rsb_algo(parrsb_options_t options, int algo)
 
-    int parrsb_options_copy(parrsb_options_t *dest, const parrsb_options_t src);
+    int parrsb_options_copy(parrsb_options_t *dest, const parrsb_options_t src)
 
-    void parrsb_options_print(const parrsb_options_t options);
+    void parrsb_options_print(const parrsb_options_t options)
 
-    int parrsb_options_free(parrsb_options_t *options);
+    int parrsb_options_free(parrsb_options_t *options)
 
     # Read a .re2 file
     int parrsb_read_mesh(unsigned *nel, unsigned *nv, double **coord, unsigned *nbcs,
-                         long long **bcs, char *name, MPI_Comm comm);
+                         long long **bcs, char *name, MPI_Comm comm)
 
     # Calculate connectivity
     int parrsb_conn_mesh(long long *vtx, double *coord, unsigned nel, unsigned nDim,
                          long long *periodicInfo, int nPeriodicFaces, double tol,
-                         MPI_Comm comm);
+                         MPI_Comm comm)
 
     # Partition a SEM mesh read with parrsb_read_mesh()
     int parrsb_part_mesh(int *part, const long long *const vtx,
                          const double *const xyz, const int *const tag,
                          const int nel, const int nv,
-                         const parrsb_options_t options, MPI_Comm comm);
+                         const parrsb_options_t options, MPI_Comm comm)
 
     # Partition a general graph
     int parrsb_part_graph(int *part, unsigned num_nodes, const long long *nodes,
                           const unsigned *offsets, const long long *neighbors,
-                          const parrsb_options_t options, const MPI_Comm comm);
-
+                          const parrsb_options_t options, const MPI_Comm comm)
