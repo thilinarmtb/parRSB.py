@@ -1,0 +1,42 @@
+name: parRSB.py lint
+on:
+  push:
+    branch: [main]
+  pull_request:
+    branch: [main]
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run with tmate (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+env:
+  VENV: ${{ github.workspace }}/.venv
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ inputs.debug_enabled }}
+      - name: Initialize the venv
+        shell: bash
+        run: |
+          uv sync --no-install-project
+      - name: Run cython-lint
+        shell: bash
+        run: |
+          source ${VENV}/bin/activate
+          cython-lint src/
+      - name: Run isort
+        shell: bash
+        run: |
+          source ${VENV}/bin/activate
+          isort src/
+      - name: Block to allow inspecting failures
+        run: sleep 60m
+        if: ${{ failure() && inputs.debug_enabled }}
