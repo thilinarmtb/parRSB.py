@@ -31,22 +31,10 @@ jobs:
           sudo apt install -y openmpi-bin libopenmpi-dev
           sudo apt install -y libblas-dev liblapack-dev
           sudo apt install -y build-essential cmake
-      - name: Initialize the venv
+      - name: Run parRSB.py unit tests
         shell: bash
         run: |
-           uv venv ${VENV}
-      - name: Build parRSB
-        shell: bash
-        run: |
-          git clone https://github.com/thilinarmtb/parRSB.git -b general_graph
-          cd parRSB
-          cmake -B build -S . -DCMAKE_INSTALL_PREFIX=${VENV}
-          cmake --build build --target install
-      - name: Build parRSB.py
-        shell: bash
-        run: |
-           source ${VENV}/bin/activate
-           uv pip install . --target ${VENV} -vv -Ccmake.define.parRSB_DIR=${VENV}
+          ./bin/test.sh
       - name: Block to allow inspecting failures
         run: sleep 60m
         if: ${{ failure() && inputs.debug_enabled }}
