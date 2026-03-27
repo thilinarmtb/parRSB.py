@@ -36,6 +36,10 @@ cdef class Mesh:
 
         return arr
 
+    @property
+    def num_vertices(self):
+        return self.nv
+
     def __dealloc__(self):
         free(self.bcs)
         free(self.coord)
