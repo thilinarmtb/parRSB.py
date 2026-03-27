@@ -40,6 +40,18 @@ cdef class Mesh:
     def num_vertices(self):
         return self.nv
 
+    @property
+    def num_elements(self):
+        return self.nel
+
+    @property
+    def num_dimensions(self):
+        return self.ndim
+
+    @property
+    def num_periodic_faces(self):
+        return self.nbcs
+
     def __dealloc__(self):
         free(self.bcs)
         free(self.coord)
