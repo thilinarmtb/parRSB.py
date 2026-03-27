@@ -5,6 +5,7 @@ set -o pipefail
 
 : ${CC:=mpicc}
 : ${UV:=uv}
+: ${CMAKE:=cmake}
 
 ############################
 # Don't touch what follows #
@@ -59,8 +60,8 @@ function init_venv() {
 
 function build_parrsb() {
   git clone https://github.com/thilinarmtb/parRSB.git -b general_graph ${PARRSB_DIR}
-  cmake -B ${PARRSB_DIR}/build -S ${PARRSB_DIR} -DCMAKE_INSTALL_PREFIX=${VENV}
-  cmake --build ${PARRSB_DIR}/build --target install
+  CC=${CC} ${CMAKE} -B ${PARRSB_DIR}/build -S ${PARRSB_DIR} -DCMAKE_INSTALL_PREFIX=${VENV}
+  ${CMAKE} --build ${PARRSB_DIR}/build --target install
 }
 
 function build_parrsb_py() {
@@ -81,8 +82,7 @@ function run_tests() {
   done
 }
 
-echo "Running tests in ${WRK_DIR} with CC=${CC}, uv=`which ${UV}`"
-export CC=${CC}
+echo "Running tests in ${WRK_DIR} with CC=${CC}, uv=`which ${UV}`, cmake=`which ${CMAKE}`"
 build_genbox
 build_meshes
 init_venv
