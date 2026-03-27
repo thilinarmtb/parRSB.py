@@ -27,16 +27,21 @@ jobs:
         shell: bash
         run: |
           uv sync --no-install-project
-      - name: Run cython-lint
+      - name: Run cython-lint in src/
         shell: bash
         run: |
           source ${VENV}/bin/activate
           cython-lint src/
-      - name: Run isort
+      - name: Run isort in src/
         shell: bash
         run: |
           source ${VENV}/bin/activate
           isort src/
+    - name: Run ruff format in tests/
+      uses: astral-sh/ruff-action@v3
+      with:
+        src: "./tests"
+        args: "format --check --diff"
       - name: Block to allow inspecting failures
         run: sleep 60m
         if: ${{ failure() && inputs.debug_enabled }}
