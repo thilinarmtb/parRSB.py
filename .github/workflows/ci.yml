@@ -1,9 +1,11 @@
 name: CI tests
 on:
   push:
-    branch: [main]
+    branches:
+      - main
   pull_request:
-    branch: [main]
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       debug_enabled:
@@ -13,7 +15,6 @@ on:
         default: false
 env:
   CC: mpicc
-  VENV: ${{ github.workspace }}/.venv
 jobs:
   ci:
     runs-on: ubuntu-latest

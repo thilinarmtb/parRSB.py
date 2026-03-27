@@ -1,9 +1,11 @@
 name: Linting checks
 on:
   push:
-    branch: [main]
+    branches:
+      - main
   pull_request:
-    branch: [main]
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       debug_enabled:
@@ -14,7 +16,7 @@ on:
 env:
   VENV: ${{ github.workspace }}/.venv
 jobs:
-  ci:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -26,7 +28,7 @@ jobs:
       - name: Initialize the venv
         shell: bash
         run: |
-          uv sync --no-install-project
+          VIRTUAL_ENV=${VENV} uv sync --active --no-install-project
       - name: Run cython-lint in src/
         shell: bash
         run: |
