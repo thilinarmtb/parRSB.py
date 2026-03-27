@@ -28,8 +28,9 @@ The library is built on top of:
 On Ubuntu/Debian, install them with:
 
 ```sh
+sudo apt -y update
 sudo apt install -y openmpi-bin libopenmpi-dev
-sudo apt install -y build-essential cmake
+sudo apt install -y cmake
 ```
 
 ### Python Requirements
