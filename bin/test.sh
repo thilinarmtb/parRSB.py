@@ -4,6 +4,7 @@ set -e
 set -o pipefail
 
 : ${CC:=mpicc}
+: ${UV:=uv}
 
 ############################
 # Don't touch what follows #
@@ -53,7 +54,7 @@ function build_meshes() {
 # Functions to help build parRSB/parRSB.py  #
 #############################################
 function init_venv() {
-  VIRTUAL_ENV=${VENV} uv sync --active --no-install-project
+  VIRTUAL_ENV=${VENV} ${UV} sync --active --no-install-project
 }
 
 function build_parrsb() {
@@ -64,7 +65,7 @@ function build_parrsb() {
 
 function build_parrsb_py() {
   source ${VENV}/bin/activate
-  uv pip install . --target ${VENV} -vv -Ccmake.define.parRSB_DIR=${VENV}
+  ${UV} pip install . --target ${VENV} -vv -Ccmake.define.parRSB_DIR=${VENV}
 }
 
 #############
@@ -80,7 +81,7 @@ function run_tests() {
   done
 }
 
-echo "Running tests in ${WRK_DIR} with CC=${CC}"
+echo "Running tests in ${WRK_DIR} with CC=${CC}, uv=`which ${UV}`"
 export CC=${CC}
 build_genbox
 build_meshes
