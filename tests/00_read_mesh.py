@@ -10,5 +10,5 @@ if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     m = Mesh(sys.argv[1], comm)
 
-    assert m.nv == 8
+    assert m.num_vertices == 8
     sys.exit(0)
