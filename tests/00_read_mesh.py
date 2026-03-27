@@ -10,7 +10,18 @@ if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     m = Mesh(sys.argv[1], comm)
 
-    assert m.num_dimensions == 3
-    assert m.num_vertices == 8
-    assert m.num_elements == 8 * 8 * 8
-    assert m.num_periodic_faces == 6 * 8 * 8
+    ndim = comm.allreduce(m.num_dimensions, op=MPI.MIN)
+    assert ndim == 3
+    ndim = comm.allreduce(m.num_dimensions, op=MPI.MAX)
+    assert ndim == 3
+
+    nv = comm.allreduce(m.num_vertices, op=MPI.MIN)
+    assert nv == 8
+    nv = comm.allreduce(m.num_vertices, op=MPI.MAX)
+    assert nv == 8
+
+    nel = comm.allreduce(m.num_elements, op=MPI.SUM)
+    assert nel == 8 * 8 * 8
+
+    nbcs = comm.allreduce(m.num_periodic_faces, op=MPI.SUM)
+    assert nbcs == 6 * 8 * 8
