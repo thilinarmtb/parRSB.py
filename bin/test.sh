@@ -3,6 +3,11 @@ set -x
 set -e
 set -o pipefail
 
+: ${CC:=mpicc}
+
+############################
+# Don't touch what follows #
+############################
 WRK_DIR=$(mktemp -d)
 VENV=${WRK_DIR}/.venv
 NEK5K_DIR=${WRK_DIR}/Nek5000
@@ -67,14 +72,16 @@ function build_parrsb_py() {
 #############
 function run_tests() {
   export LD_LIBRARY_PATH=${VENV}/lib:${LD_LIBRARY_PATH}
+  export DYLD_LIBRARY_PATH=${VENV}/lib:${DYLD_LIBRARY_PATH}
 
   for path in `ls ./tests/*.py`; do
     file=$(basename ${path})
-    uv run --python ${VENV} ${path} ${WRK_DIR}/${file/.py/}
+    ${UV} run --python ${VENV} ${path} ${WRK_DIR}/${file/.py/}
   done
 }
 
-echo "Running tests in ${WRK_DIR} .."
+echo "Running tests in ${WRK_DIR} with CC=${CC}"
+export CC=${CC}
 build_genbox
 build_meshes
 init_venv

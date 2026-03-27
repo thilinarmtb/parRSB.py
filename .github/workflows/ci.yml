@@ -13,8 +13,6 @@ on:
         description: 'Run with tmate (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
-env:
-  CC: mpicc
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -34,7 +32,7 @@ jobs:
       - name: Run unit tests
         shell: bash
         run: |
-          ./bin/test.sh
+          CC=mpicc ./bin/test.sh
       - name: Block to allow inspecting failures
         run: sleep 60m
         if: ${{ failure() && inputs.debug_enabled }}
