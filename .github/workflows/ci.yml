@@ -32,7 +32,7 @@ jobs:
       - name: Run unit tests
         shell: bash
         run: |
-          CC=mpicc ./bin/test.sh
+          CC=mpicc MPIOPTS="--oversubscribe" ./bin/test.sh
       - name: Block to allow inspecting failures
         run: sleep 60m
         if: ${{ failure() && inputs.debug_enabled }}
