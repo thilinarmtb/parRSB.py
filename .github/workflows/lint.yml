@@ -1,4 +1,4 @@
-name: parRSB.py lint
+name: Linting checks
 on:
   push:
     branch: [main]
