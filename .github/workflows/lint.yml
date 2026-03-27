@@ -39,11 +39,11 @@ jobs:
         run: |
           source ${VENV}/bin/activate
           isort src/
-    - name: Run ruff format in tests/
-      uses: astral-sh/ruff-action@v3
-      with:
-        src: "./tests"
-        args: "format --check --diff"
+      - name: Run ruff format in tests/
+        uses: astral-sh/ruff-action@v3
+        with:
+          src: "./tests"
+          args: "format --check --diff"
       - name: Block to allow inspecting failures
         run: sleep 60m
         if: ${{ failure() && inputs.debug_enabled }}
