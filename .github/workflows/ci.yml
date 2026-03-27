@@ -30,8 +30,7 @@ jobs:
         run: |
           sudo apt -y update
           sudo apt install -y openmpi-bin libopenmpi-dev
-          sudo apt install -y libblas-dev liblapack-dev
-          sudo apt install -y build-essential cmake
+          sudo apt install -y cmake
       - name: Run unit tests
         shell: bash
         run: |
