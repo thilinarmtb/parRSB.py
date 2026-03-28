@@ -58,7 +58,7 @@ function build_meshes() {
 # Functions to help build parRSB/parRSB.py  #
 #############################################
 function init_venv() {
-  VIRTUAL_ENV=${VENV} ${UV} sync --active --no-install-project
+  VIRTUAL_ENV=${VENV} ${UV} sync --no-install-project --active
 }
 
 function build_parrsb() {
@@ -68,7 +68,6 @@ function build_parrsb() {
 }
 
 function build_parrsb_py() {
-  source ${VENV}/bin/activate
   ${UV} pip install . --target ${VENV} -vv -Ccmake.define.parRSB_DIR=${VENV}
 }
 
@@ -76,6 +75,8 @@ function build_parrsb_py() {
 # Run tests #
 #############
 function run_tests() {
+  source ${VENV}/bin/activate
+
   export LD_LIBRARY_PATH=${VENV}/lib:${LD_LIBRARY_PATH}
   export DYLD_LIBRARY_PATH=${VENV}/lib:${DYLD_LIBRARY_PATH}
 
@@ -83,6 +84,8 @@ function run_tests() {
     file=$(basename ${path})
     ${MPIRUN} ${MPIOPTS} -np ${NP} ${UV} run --python ${VENV} ${path} ${WRK_DIR}/${file/.py/}
   done
+
+  deactivate
 }
 
 echo "Running tests in ${WRK_DIR} with CC=${CC}, uv=`which ${UV}`, cmake=`which ${CMAKE}`"
