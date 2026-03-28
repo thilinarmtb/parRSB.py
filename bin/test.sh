@@ -6,6 +6,7 @@ set -o pipefail
 : ${CC:=mpicc}
 : ${UV:=uv}
 : ${CMAKE:=cmake}
+: ${FC:=gfortran}
 : ${MPIRUN:=mpirun}
 : ${MPIOPTS:=}
 : ${NP:=4}
@@ -33,7 +34,7 @@ function build_genbox() {
   # We have to change directory due to the way makenek script is written.
   cwd=${PWD}
   cd ${NEK5K_DIR}/tools
-  CC=gcc FC=gfortran ./maketools genbox/
+  CC=${CC} FC=${FC} ./maketools genbox/
   cd ${cwd}
 }
 
