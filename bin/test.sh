@@ -82,7 +82,8 @@ function run_tests() {
 
   for path in `ls ./tests/*.py`; do
     file=$(basename ${path})
-    ${MPIRUN} ${MPIOPTS} -np ${NP} ${UV} run --python ${VENV} ${path} ${WRK_DIR}/${file/.py/}
+    ${MPIRUN} ${MPIOPTS} -np ${NP} ${UV} run --active --python ${VENV} \
+      ${path} ${WRK_DIR}/${file/.py/}
   done
 
   deactivate
