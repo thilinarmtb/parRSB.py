@@ -32,7 +32,7 @@ jobs:
       - name: Run unit tests
         shell: bash
         run: |
-          CC=mpicc MPIOPTS="--oversubscribe" ./bin/test.sh
+          CC=mpicc MPIOPTS="--oversubscribe" bash -x ./bin/test.sh
       - name: Check if the working directory is clean
         shell: bash
         run: |
