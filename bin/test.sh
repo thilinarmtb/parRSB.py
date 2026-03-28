@@ -89,10 +89,21 @@ function run_tests() {
   deactivate
 }
 
-echo "Running tests in ${WRK_DIR} with CC=${CC}, uv=`which ${UV}`, cmake=`which ${CMAKE}`"
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+echo -e "${GREEN}"
+echo "Running tests in ${WRK_DIR} ..."
+echo "  CC    : ${CC}"
+echo "  FC    : ${FC}"
+echo "  uv    : `which ${UV}`"
+echo "  cmake : `which ${CMAKE}`"
+echo "  mpirun: `which ${MPIRUN}`, opts: \"${MPIOPTS} -np ${NP}\""
+echo -e "${RESET}"
 build_genbox
 build_meshes
 init_venv
 build_parrsb
 build_parrsb_py
 run_tests
+echo -e "${GREEN}Tests passed.${RESET}"
