@@ -24,6 +24,7 @@ The library is built on top of:
 
 - A C compiler with MPI support (e.g., `mpicc` via [OpenMPI](https://www.open-mpi.org/))
 - CMake (>= 3.21)
+- A Fortran compiler (Only if you want to run the tests)
 
 On Ubuntu/Debian, install them with:
 
@@ -31,6 +32,7 @@ On Ubuntu/Debian, install them with:
 sudo apt -y update
 sudo apt install -y openmpi-bin libopenmpi-dev
 sudo apt install -y cmake
+sudo apt install -y gfortran
 ```
 
 ### Python Requirements
