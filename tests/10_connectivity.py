@@ -10,7 +10,7 @@ if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     m = Mesh(sys.argv[1], comm)
 
-    vtx = m.find_connectivity(0.2)
+    vtx = m.connectivity(0.2)
 
     minv = comm.allreduce(np.min(vtx), op=MPI.MIN)
     maxv = comm.allreduce(np.max(vtx), op=MPI.MAX)
