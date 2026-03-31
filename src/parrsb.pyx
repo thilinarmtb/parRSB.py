@@ -27,7 +27,7 @@ cdef class Mesh:
         cdef int err = parrsb_conn_mesh(vl, self.coord, self.nel, self.ndim, self.bcs,
                                         self.nbcs, tol, self.c.ob_mpi)
 
-        arr = np.zeros((self.nel, self.nv))
+        arr = np.zeros((self.nel, self.nv), dtype=int)
         if err == 0:
             for e in range(self.nel):
                 for v in range(self.nv):
