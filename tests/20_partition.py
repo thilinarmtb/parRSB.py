@@ -12,3 +12,7 @@ if __name__ == "__main__":
 
     # Let parRSB.py calculate the vertices.
     part = m.partition()
+
+    # Use vertices already calculated.
+    vtx = m.connectivity(0.2)
+    part = m.partition(vtx)
