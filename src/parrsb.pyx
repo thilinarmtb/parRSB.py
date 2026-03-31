@@ -65,8 +65,10 @@ cdef class Mesh:
         if err == 0:
             for e in range(self.nel):
                 arr[e] = part[e]
-
         free(part)
+
+        if err != 0:
+            raise RuntimeError(f"parrsb_part_mesh() failed with error = {err}")
         return arr
 
     def connectivity(self, double tol):
@@ -77,6 +79,8 @@ cdef class Mesh:
             for e in range(self.nel):
                 for v in range(self.nv):
                     arr[e, v] = self.vl[e * self.nv + v]
+        else:
+            raise RuntimeError(f"parrsb_conn_mesh() failed with error = {err}")
         return arr
 
     @property
