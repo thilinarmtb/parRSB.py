@@ -44,10 +44,34 @@ cdef class Mesh:
         return parrsb_conn_mesh(self.vl, self.coord, self.nel, self.ndim, self.bcs,
                                 self.nbcs, tol, self.c.ob_mpi)
 
+    def partition(self, long long[:, :] vtx=None, Options opts=None):
+        cdef long long [:, :] vtx_
+        cdef long long *vl_
+
+        if vtx is None:
+            self._parrsb_conn_mesh()
+            vl_ = self.vl
+        else:
+            vtx_= np.ascontiguousarray(vtx)
+            vl_ = &vtx_[0, 0]
+
+        cdef int *part = <int *>malloc(self.nel * cython.sizeof(cython.int))
+        cdef int err = parrsb_part_mesh(part, vl_, self.coord, NULL, self.nel, self.nv,
+                                        opts.opts, self.c.ob_mpi)
+
+        arr = np.zeros(self.nel, dtype=np.int32)
+        if err == 0:
+            for e in range(self.nel):
+                arr[e] = part[e]
+
+        free(part)
+        return arr
+
+
     def find_connectivity(self, double tol):
         cdef int err = self._parrsb_conn_mesh(tol)
 
-        arr = np.zeros((self.nel, self.nv), dtype=int)
+        arr = np.zeros((self.nel, self.nv), dtype=np.int64)
         if err == 0:
             for e in range(self.nel):
                 for v in range(self.nv):
