@@ -1,0 +1,9 @@
+base.rea
+-3                     spatial dimension  ( < 0 --> generate .rea/.re2 pair)
+1                      number of fields
+Box
+-4  -2  -1                                           nelx,nely,nelz for Box ! multiple of 3
+0 1 1.                                               x0,x1,gain  (rescaled in usrdat)
+0 1 1.                                               y0,y1,gain  (rescaled in usrdat)
+0 1 1.                                               z0,z1,gain
+W  ,W  ,W  ,W  ,W  ,W                                bc's  (3 chars each!)
