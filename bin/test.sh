@@ -100,10 +100,10 @@ echo "  uv    : `which ${UV}`"
 echo "  cmake : `which ${CMAKE}`"
 echo "  mpirun: `which ${MPIRUN}`, opts: \"${MPIOPTS} -np ${NP}\""
 echo -e "${RESET}"
-build_genbox
-build_meshes
 init_venv
 build_parrsb
 build_parrsb_py
+build_genbox
+build_meshes
 run_tests
 echo -e "${GREEN}Tests passed.${RESET}"
