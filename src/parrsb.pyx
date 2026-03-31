@@ -55,9 +55,11 @@ cdef class Mesh:
             vtx_= np.ascontiguousarray(vtx)
             vl_ = &vtx_[0, 0]
 
+        opts_ = Options() if opts is None else opts
+
         cdef int *part = <int *>malloc(self.nel * cython.sizeof(cython.int))
         cdef int err = parrsb_part_mesh(part, vl_, self.coord, NULL, self.nel, self.nv,
-                                        opts.opts, self.c.ob_mpi)
+                                        opts_.opts, self.c.ob_mpi)
 
         arr = np.zeros(self.nel, dtype=np.int32)
         if err == 0:
