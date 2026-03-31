@@ -67,7 +67,6 @@ cdef class Mesh:
         free(part)
         return arr
 
-
     def find_connectivity(self, double tol):
         cdef int err = self._parrsb_conn_mesh(tol)
 
