@@ -5,6 +5,22 @@ from parrsb cimport parrsb_conn_mesh, parrsb_read_mesh
 import numpy as np
 
 
+cdef class Options:
+    cdef parrsb_options_t opts
+
+    def __cinit__(self):
+        parrsb_options_get_default(&self.opts)
+
+    def set_partitioner(self, int partitioner):
+        parrsb_options_set_partitioner(self.opts, partitioner)
+
+    def set_rsb_algo(self, int rsb_algo):
+        parrsb_options_set_rsb_algo(self.opts, rsb_algo)
+
+    def __dealloc__(self):
+        parrsb_options_free(&self.opts)
+
+
 cdef class Mesh:
     cdef unsigned nel, nv, nbcs, ndim
     cdef long long *bcs
