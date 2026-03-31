@@ -11,10 +11,10 @@ cdef class Options:
     def __cinit__(self):
         parrsb_options_get_default(&self.opts)
 
-    def set_partitioner(self, int partitioner):
+    def partitioner(self, int partitioner):
         parrsb_options_set_partitioner(self.opts, partitioner)
 
-    def set_rsb_algo(self, int rsb_algo):
+    def rsb_algo(self, int rsb_algo):
         parrsb_options_set_rsb_algo(self.opts, rsb_algo)
 
     def __dealloc__(self):
