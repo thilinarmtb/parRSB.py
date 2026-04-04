@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.21...4.0.0)
 
 project(${SKBUILD_PROJECT_NAME} LANGUAGES C)
 
-set(CMAKE_PREFIX_PATH "${parRSB_DIR};${CMAKE_PREFIX_PATH}")
-
 find_package(Python
   COMPONENTS
     Interpreter
