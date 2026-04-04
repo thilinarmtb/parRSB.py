@@ -16,6 +16,7 @@ set -o pipefail
 WRK_DIR=$(mktemp -d)
 VENV=${WRK_DIR}/.venv
 NEK5K_DIR=${WRK_DIR}/Nek5000
+GSLIB_DIR=${WRK_DIR}/gslib
 PARRSB_DIR=${WRK_DIR}/parRSB
 
 #############################################
@@ -61,14 +62,22 @@ function init_venv() {
   VIRTUAL_ENV=${VENV} ${UV} sync --no-install-project --active
 }
 
+function build_gslib() {
+  git clone https://github.com/thilinarmtb/gslib.git -b general_graph ${GSLIB_DIR}
+  cmake -B ${GSLIB_DIR}/build -S ${GSLIB_DIR} -DCMAKE_INSTALL_PREFIX=${VENV}
+  cmake --build ${GSLIB_DIR}/build --target install
+}
+
 function build_parrsb() {
-  git clone https://github.com/thilinarmtb/parRSB.git -b general_graph ${PARRSB_DIR}
-  CC=${CC} ${CMAKE} -B ${PARRSB_DIR}/build -S ${PARRSB_DIR} -DCMAKE_INSTALL_PREFIX=${VENV}
+  git clone https://github.com/thilinarmtb/parRSB.git ${PARRSB_DIR}
+  CC=${CC} ${CMAKE} -B ${PARRSB_DIR}/build -S ${PARRSB_DIR} \
+    -DCMAKE_INSTALL_PREFIX=${VENV} -Dgs_DIR=${VENV}/lib/cmake/gs
   ${CMAKE} --build ${PARRSB_DIR}/build --target install
 }
 
 function build_parrsb_py() {
-  ${UV} pip install . --target ${VENV} -vv -Ccmake.define.parRSB_DIR=${VENV}
+  ${UV} pip install . --target ${VENV} -vv \
+    -Ccmake.define.parRSB_DIR=${VENV}/lib/cmake/parRSB
 }
 
 #############
@@ -101,6 +110,7 @@ echo "  cmake : `which ${CMAKE}`"
 echo "  mpirun: `which ${MPIRUN}`, opts: \"${MPIOPTS} -np ${NP}\""
 echo -e "${RESET}"
 init_venv
+build_gslib
 build_parrsb
 build_parrsb_py
 build_genbox
