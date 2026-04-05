@@ -13,6 +13,8 @@ on:
         description: 'Run with tmate (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
+  repository_dispatch:
+    types: [parrsb_event]
 jobs:
   ci:
     runs-on: ubuntu-latest
