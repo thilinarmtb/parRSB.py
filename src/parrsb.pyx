@@ -14,8 +14,8 @@ cdef class Options:
     def partitioner(self, int partitioner):
         parrsb_options_set_partitioner(self.opts, partitioner)
 
-    def rsb_algo(self, int rsb_algo):
-        parrsb_options_set_rsb_algo(self.opts, rsb_algo)
+    # def rsb_algo(self, int rsb_algo):
+       # parrsb_options_set_rsb_algo(self.opts, rsb_algo)
 
     def __dealloc__(self):
         parrsb_options_free(&self.opts)
@@ -58,7 +58,7 @@ cdef class Mesh:
         opts_ = Options() if opts is None else opts
 
         cdef int *part = <int *>malloc(self.nel * cython.sizeof(cython.int))
-        cdef int err = parrsb_part_mesh(part, vl_, self.coord, NULL, self.nel, self.nv,
+        cdef int err = parrsb_part_mesh(part, vl_, self.coord, self.nel, self.nv,
                                         opts_.opts, self.c.ob_mpi)
 
         arr = np.zeros(self.nel, dtype=np.int32)
