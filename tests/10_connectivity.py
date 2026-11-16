@@ -10,9 +10,11 @@ if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     m = Mesh(sys.argv[1], comm)
 
-    vtx = m.connectivity(0.2)
+    assert m.connectivity(0.2) is None
+    vtx = m.vertices
 
     minv = comm.allreduce(np.min(vtx), op=MPI.MIN)
     maxv = comm.allreduce(np.max(vtx), op=MPI.MAX)
     assert minv == 1
     assert maxv == 36
+

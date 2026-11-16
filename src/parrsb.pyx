@@ -48,6 +48,7 @@ cdef class Mesh:
     cdef long long *bcs
     cdef long long *vl
     cdef double *coord
+    cdef bint _connectivity_valid
     cdef public MPI.Comm c
 
     def __cinit__(self, *args, **kwargs):
@@ -61,6 +62,7 @@ cdef class Mesh:
         self.vl = NULL
         self.coord = NULL
         self.c = None
+        self._connectivity_valid = False
 
     def __init__(self, str name, MPI.Comm comm not None):
         """Read a mesh from a file using its filename prefix."""
@@ -231,7 +233,10 @@ cdef class Mesh:
         return mesh
 
     cdef _parrsb_conn_mesh(self, double tol=0.2):
-        return parrsb_conn_mesh(
+        cdef int err
+
+        self._connectivity_valid = False
+        err = parrsb_conn_mesh(
             self.vl,
             self.coord,
             self.nel,
@@ -241,32 +246,23 @@ cdef class Mesh:
             tol,
             self.c.ob_mpi,
         )
+        self._connectivity_valid = err == 0
+        return err
 
-    def partition(self, long long[:, :] vtx=None, Options opts=None):
-        cdef long long[:, :] vtx_
-        cdef long long *vl_
+    def partition(self, Options opts=None):
+        """Partition collectively, reusing previously computed connectivity.
+
+        All ranks must call connectivity and partition in the same order.
+        """
         cdef int err
 
-        if vtx is None:
+        if not self._connectivity_valid:
             err = self._parrsb_conn_mesh()
 
             if err != 0:
                 raise RuntimeError(
                     f"parrsb_conn_mesh() failed with error = {err}"
                 )
-
-            vl_ = self.vl
-        else:
-            if vtx.shape[0] != self.nel or vtx.shape[1] != self.nv:
-                raise ValueError(
-                    f"vtx must have shape {(self.nel, self.nv)}"
-                )
-
-            vtx_ = np.ascontiguousarray(vtx)
-            vl_ = NULL
-
-            if self.nel != 0:
-                vl_ = &vtx_[0, 0]
 
         opts_ = Options() if opts is None else opts
 
@@ -284,7 +280,7 @@ cdef class Mesh:
         try:
             err = parrsb_part_mesh(
                 part,
-                vl_,
+                self.vl,
                 self.coord,
                 self.nel,
                 self.nv,
@@ -307,12 +303,19 @@ cdef class Mesh:
             free(part)
 
     def connectivity(self, double tol):
+        """Compute and store connectivity collectively using the given tolerance."""
         cdef int err = self._parrsb_conn_mesh(tol)
 
         if err != 0:
             raise RuntimeError(
                 f"parrsb_conn_mesh() failed with error = {err}"
             )
+
+    @property
+    def vertices(self):
+        """Return a copy of stored vertex IDs; connectivity must be computed first."""
+        if not self._connectivity_valid:
+            raise RuntimeError("Connectivity has not been computed successfully")
 
         arr = np.zeros(
             (self.nel, self.nv),
