@@ -2,6 +2,43 @@
 set -e
 set -o pipefail
 
+usage() {
+  cat <<'EOF'
+Usage: bash bin/test.sh [OPTIONS]
+
+Build dependencies and run the tests.
+
+Options:
+  --temp-dir DIR      Create a unique temporary directory inside DIR.
+                      Creates DIR if needed. Defaults to mktemp's location.
+  -h, --help          Show this help and exit.
+EOF
+}
+
+TEMP_PARENT=
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --temp-dir)
+      if [ "$#" -lt 2 ] || [ -z "$2" ] || [[ "$2" == --* ]] || [ "$2" = -h ]; then
+        printf 'Error: %s requires a value.\n' "$1" >&2
+        exit 1
+      fi
+      TEMP_PARENT=$2
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      printf 'Error: unknown argument: %s\n\n' "$1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
 : ${CC:=mpicc}
 : ${UV:=uv}
 : ${CMAKE:=cmake}
@@ -13,7 +50,14 @@ set -o pipefail
 ############################
 # Don't touch what follows #
 ############################
-WRK_DIR=$(mktemp -d)
+TEMP_TEMPLATE="parrsb.$(date +%m_%d_%y_%H_%M_%S)_XXXXXXXX"
+if [ -n "$TEMP_PARENT" ]; then
+  mkdir -p -- "$TEMP_PARENT"
+  TEMP_PARENT=$(cd -- "$TEMP_PARENT" && pwd -P)
+  WRK_DIR=$(mktemp -d "${TEMP_PARENT}/${TEMP_TEMPLATE}")
+else
+  WRK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/${TEMP_TEMPLATE}")
+fi
 VENV=${WRK_DIR}/.venv
 NEK5K_DIR=${WRK_DIR}/Nek5000
 GSLIB_DIR=${WRK_DIR}/gslib
@@ -63,7 +107,7 @@ function init_venv() {
 }
 
 function build_gslib() {
-  git clone https://github.com/thilinarmtb/gslib.git -b general_graph ${GSLIB_DIR}
+  git clone https://github.com/thilinarmtb/gslib.git ${GSLIB_DIR}
   cmake -B ${GSLIB_DIR}/build -S ${GSLIB_DIR} -DCMAKE_INSTALL_PREFIX=${VENV}
   cmake --build ${GSLIB_DIR}/build --target install
 }
@@ -76,27 +120,44 @@ function build_parrsb() {
 }
 
 function build_parrsb_py() {
-  ${UV} pip install . --target ${VENV} -vv \
-    -Ccmake.define.parRSB_DIR=${VENV}/lib/cmake/parRSB
+  ${UV} pip install --python "${VENV}/bin/python" \
+    --reinstall --no-cache . \
+    -Ccmake.define.parRSB_DIR="${VENV}/lib/cmake/parRSB"
 }
+
+#function build_parrsb_py() {
+#  ${UV} pip install . --target ${VENV} -vv \
+#    -Ccmake.define.parRSB_DIR=${VENV}/lib/cmake/parRSB
+#}
 
 #############
 # Run tests #
 #############
 function run_tests() {
-  source ${VENV}/bin/activate
+  export LD_LIBRARY_PATH="${VENV}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  export DYLD_LIBRARY_PATH="${VENV}/lib${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
 
-  export LD_LIBRARY_PATH=${VENV}/lib:${LD_LIBRARY_PATH}
-  export DYLD_LIBRARY_PATH=${VENV}/lib:${DYLD_LIBRARY_PATH}
-
-  for path in `ls ./tests/*.py`; do
-    file=$(basename ${path})
-    ${MPIRUN} ${MPIOPTS} -np ${NP} ${UV} run --active --python ${VENV} \
-      ${path} ${WRK_DIR}/${file/.py/}
+  for path in ./tests/*.py; do
+    file=$(basename "${path}")
+    ${MPIRUN} ${MPIOPTS} -np "${NP}" "${VENV}/bin/python" \
+      "${path}" "${WRK_DIR}/${file/.py/}"
   done
-
-  deactivate
 }
+
+#function run_tests() {
+#  source ${VENV}/bin/activate
+#
+#  export LD_LIBRARY_PATH=${VENV}/lib:${LD_LIBRARY_PATH}
+#  export DYLD_LIBRARY_PATH=${VENV}/lib:${DYLD_LIBRARY_PATH}
+
+#  for path in `ls ./tests/*.py`; do
+#    file=$(basename ${path})
+#    ${MPIRUN} ${MPIOPTS} -np ${NP} ${UV} run --active --python ${VENV} \
+#      ${path} ${WRK_DIR}/${file/.py/}
+#  done
+
+ # deactivate
+#}
 
 GREEN='\033[0;32m'
 RESET='\033[0m'
@@ -117,3 +178,4 @@ build_genbox
 build_meshes
 run_tests
 echo -e "${GREEN}Tests passed.${RESET}"
+

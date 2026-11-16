@@ -13,7 +13,7 @@ cdef extern from "parrsb.h":
 
     int parrsb_options_set_partitioner(parrsb_options_t options, int partitioner)
 
-    int parrsb_options_set_rsb_algo(parrsb_options_t options, int algo)
+    # int parrsb_options_set_rsb_algo(parrsb_options_t options, int algo)
 
     int parrsb_options_copy(parrsb_options_t *dest, const parrsb_options_t src)
 
@@ -32,7 +32,7 @@ cdef extern from "parrsb.h":
 
     # Partition a SEM mesh read with parrsb_read_mesh()
     int parrsb_part_mesh(int *part, const long long *const vtx,
-                         const double *const xyz, const int *const tag,
+                         const double *const xyz, 
                          const int nel, const int nv,
                          const parrsb_options_t options, MPI_Comm comm)
 

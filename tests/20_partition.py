@@ -13,6 +13,15 @@ if __name__ == "__main__":
     # Let parRSB.py calculate the vertices.
     part = m.partition()
 
-    # Use vertices already calculated.
-    vtx = m.connectivity(0.2)
-    part = m.partition(vtx)
+    # Reuse connectivity calculated by the first partition call.
+    vertices = m.vertices
+    part_cached = m.partition()
+    np.testing.assert_array_equal(m.vertices, vertices)
+    assert part_cached.shape == part.shape
+
+    # Preserve connectivity explicitly calculated with a custom tolerance.
+    assert m.connectivity(0.05) is None
+    vertices = m.vertices
+    part = m.partition()
+    np.testing.assert_array_equal(m.vertices, vertices)
+
